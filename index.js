@@ -95,10 +95,10 @@ Heat.prototype.draw = function () {
     var values = ctx.getImageData(0, 0, this.width, this.height);
     var heat = ctx.createImageData(width, height);
     
-    for (var hy = 0; hy < height; hy++) {
+    for (var hy = 0; hy < height; hy+=2) {
         var vy = Math.floor(hy / this.scalar.y);
         
-        for (var hx = 0; hx < width; hx++) {
+        for (var hx = 0; hx < width; hx+=2) {
             var vx = Math.floor(hx / this.scalar.x);
             var vi = 4 * (vy * this.width + vx);
             var hi = 4 * (hy * width + hx);
@@ -107,10 +107,15 @@ Heat.prototype.draw = function () {
             if (v > this.threshold) {
                 var theta = (1 - v / 255) * 270;
                 var rgb = convert.hsl2rgb(theta, 100, 50);
-                heat.data[hi] = rgb[0];
-                heat.data[hi+1] = rgb[1];
-                heat.data[hi+2] = rgb[2];
-                heat.data[hi+3] = v;
+                var r= rgb[0];
+                var g= rgb[1]; 
+                var b = rgb[2];
+                var a = v;
+                    
+                heat.data[hi] = heat.data[hi+4] = heat.data[hi+con] = heat.data[hi+con+4] = r;
+                heat.data[hi+1] = heat.data[hi+5] = heat.data[hi+con+1] = heat.data[hi+con+5] = g;
+                heat.data[hi+2] = heat.data[hi+6] = heat.data[hi+con+2] = heat.data[hi+con+6] = b;
+                heat.data[hi+3] = heat.data[hi+7] = heat.data[hi+con+3] = heat.data[hi+con+7] = v;
             }
         }
     }
